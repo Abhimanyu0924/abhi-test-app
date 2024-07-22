@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
 
-import { useActionData,useLoaderData,useSubmit,useNavigate,useNavigation, Await } from "@remix-run/react";
-import React, {useState, useCallback,useEffect} from 'react';
+import { useActionData,useLoaderData, useSubmit,useNavigate,useNavigation } from "@remix-run/react";
+import React, {useState, useCallback, useEffect} from 'react';
 import { authenticate } from "../shopify.server";
 import { json,redirect } from "@remix-run/node";
 import db from "../db.server";
@@ -22,9 +22,9 @@ import {
     Button,
     Tag,
     RadioButton,
-    InlineStack
+    InlineStack,
+    PageActions
   } from "@shopify/polaris";
-  import { TitleBar } from "@shopify/app-bridge-react";
 
 export async function loader({params,request}){
     // const {admin} = authenticate.admin(request);
@@ -61,7 +61,8 @@ export async function action({request,params}){
     /**@type {any} */
     const data = {
         ...Object.fromEntries(await request.formData()),
-        // shop,
+        shop,
+        
     };
 
     if(data.action === "delete"){
@@ -76,36 +77,10 @@ export async function action({request,params}){
     const discount = 
         params.id ==="new"
         ? await db.discountTable.create({
-            shop : shop,
-            offerName : data.offerName,
-            offerType : data.offerType,
-            productName: data.productNames,
-            productId : data.productIds ,
-            productVariantId : data.variantIds ,
-            baselineMargin : data.baseline ,
-            bafoMargin : data.bafo ,
-            discQuantity : data.discQ ,
-            discProducts : data.discP ,
-            discAmount : data.discA,
-            expectedProfit : data.expetctedProfits || "",
-            startDate : data.startDate,
-            endDate :data.endDate ,
+          data
         })
         : await db.discountTable.update({where : {id : Number(params.id)}}, {
-            shop : shop,
-            offerName : data.offerName,
-            offerType : data.offerType,
-            productName: data.productNames,
-            productId : data.productIds ,
-            productVariantId : data.variantIds ,
-            baselineMargin : data.baseline ,
-            bafoMargin : data.bafo ,
-            discQuantity : data.discQ ,
-            discProducts : data.discP ,
-            discAmount : data.discA,
-            expectedProfit : data.expetctedProfits || "",
-            startDate : data.startDate,
-            endDate :data.endDate 
+          data
         });
       
         
@@ -182,6 +157,26 @@ export default function discountForm(){
         }
   }
 
+    const submit = useSubmit();
+    function handleSave(){
+      const data = {
+        offerName : formState.offerName,
+        offerType : formState.offerType,
+        productName : (formState.productTitles),
+        productId : (formState.productIds),
+        productVariantId : (formState.productVariants),
+        quantity : parseInt(0),
+        discounting :parseInt(0),
+        subDiscount : "",
+        discountedAmount : parseInt(0),
+        startDate : formState.startDate,
+        endDate : formState.endDate
+      }
+      setCleanFornState({...formState});
+      submit(data,{method:"post"});
+    }
+    
+
     const maxOffer = 5;
     const handleChange = useCallback(
       function(_,newValue){
@@ -239,6 +234,29 @@ export default function discountForm(){
 
       }, [formState.startDate]);
 
+
+
+      // <InlineStack wrap={false} align="space-around" >
+      //                           <RadioButton
+      //                           label = "% off each"
+      //                           checked = {formState.subDiscount === 'percentage'}
+      //                           name = "percentage"
+      //                           id="percentage"
+      //                           onChange={handleChange}
+      //                           />
+      //                           <RadioButton
+      //                           label = "$ amount off each"
+      //                           checked = {formState.subDiscount === 'amount'}
+      //                           name = "amount"
+      //                           id="amount"
+      //                           onChange={handleChange}/>
+      //                           <RadioButton
+      //                           label = "$ each"
+      //                           name = "each"
+      //                           id="each"
+      //                           checked = {formState.subDiscount === 'each'}
+      //                           onChange={handleChange}/>
+      //                       </InlineStack>
     return (
         <Page fullWidth>
             <ui-title-bar title={discounts.id?"Edit discount campaign":"Create discount campaign"}>
@@ -255,12 +273,7 @@ export default function discountForm(){
                                     label="Offer Name"
                                     autoComplete="off"
                                     value={formState.offerName}
-                                    onChange={(e) => {
-                                        const inputOfferName = e.target.value;
-                                        if (inputOfferName.length >= 3 && inputOfferName.length <= 40) {
-                                            setFormState({ ...formState, offerName: inputOfferName });
-                                                }
-                                            }}
+                                    onChange={(value) => setFormState({ ...formState, offerName: value })}
                                     error={errors.offerName}/>
                         </BlockStack>
                         <BlockStack gap="500">
@@ -273,7 +286,11 @@ export default function discountForm(){
                                   { label: "Free Shipping", value: "freeShipping" },
                                 ]}
                                 value={formState.offerType}
-                                onChange={(value) => setFormState({ ...formState, offerType : value })}
+                                onChange={(value) => {
+                                  if (value >= 3 && value <= 40) {
+                                      setFormState({ ...formState, offerName: value });
+                                          }
+                                      }}
                                 />
                                 <Text>Example : </Text>
                                 <div style={{ marginTop: "10px" }}>{renderDiscountExample(formState.offerType)}</div>
@@ -287,27 +304,7 @@ export default function discountForm(){
                             Select Products
                             </Button>
                             
-                            <InlineStack wrap={false} align="space-around" >
-                                <RadioButton
-                                label = "% off each"
-                                checked = {formState.subDiscount === 'percentage'}
-                                name = "percentage"
-                                id="percentage"
-                                onChange={handleChange}
-                                />
-                                <RadioButton
-                                label = "$ amount off each"
-                                checked = {formState.subDiscount === 'amount'}
-                                name = "amount"
-                                id="amount"
-                                onChange={handleChange}/>
-                                <RadioButton
-                                label = "$ each"
-                                name = "each"
-                                id="each"
-                                checked = {formState.subDiscount === 'each'}
-                                onChange={handleChange}/>
-                            </InlineStack>
+                            
                             <Text></Text>
                             <BlockStack gap="500">
                             <TextField
@@ -325,6 +322,23 @@ export default function discountForm(){
                                 min={formState.startDate}
                             />
                             </BlockStack>
+                            <PageActions
+                            primaryAction={{
+                              content : "save",
+                              loading: isSaving,
+                              disabled: !isDirty || isSaving||isDeleting,
+                              onAction : handleSave,
+                            }}
+                            secondaryActions = {{
+                              content : "Delete",
+                              loading : isDeleting,
+                              disabled : !discounts.id|| !discounts|| isSaving|| isDeleting,
+                              destructive : true,
+                              outline : true,
+                              onAction : ()=>submit({action : "delete"},{method:"post"})
+
+                            }}
+                            />
                         </BlockStack> 
                     </Card>
                 </Grid.Cell>

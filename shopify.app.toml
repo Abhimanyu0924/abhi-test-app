@@ -3,7 +3,7 @@
 client_id = "b35c20c4a78da97e950036ae6654bbc1"
 name = "abhi-test-app"
 handle = "abhi-test-app-1"
-application_url = "https://converter-cellular-chairs-voting.trycloudflare.com"
+application_url = "https://overnight-recent-aspect-metabolism.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "read_discounts,read_orders,read_products,write_discounts,write_product
 
 [auth]
 redirect_urls = [
-  "https://converter-cellular-chairs-voting.trycloudflare.com/auth/callback",
-  "https://converter-cellular-chairs-voting.trycloudflare.com/auth/shopify/callback",
-  "https://converter-cellular-chairs-voting.trycloudflare.com/api/auth/callback"
+  "https://overnight-recent-aspect-metabolism.trycloudflare.com/auth/callback",
+  "https://overnight-recent-aspect-metabolism.trycloudflare.com/auth/shopify/callback",
+  "https://overnight-recent-aspect-metabolism.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
