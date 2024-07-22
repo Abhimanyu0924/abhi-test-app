@@ -65,7 +65,7 @@ const CampaignTable = ({allDiscounts})=> (
 const CampaignTableRow = ({discounts})=>(
   <IndexTable.Row id = {discounts.id} position={discounts.id}>
     <IndexTable.Cell>
-      <Link to={`discounts/${discounts.id}`} >{truncat(discounts.offerName)} </Link>
+    {discounts.offerName}
     </IndexTable.Cell>
     <IndexTable.Cell>
       {discounts.offerType}

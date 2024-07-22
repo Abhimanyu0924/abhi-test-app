@@ -31,7 +31,7 @@ export function validateForm(data){
 }
 
 export async function getDiscountTable(id){
-    const discount = await db.discountTable.findFirst({where : id});
+    const discount = await db.discountTable.findFirst({where : parseInt(id)});
     if(!discount){
         return null;
     };

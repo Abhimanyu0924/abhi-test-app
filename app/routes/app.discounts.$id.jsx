@@ -156,7 +156,12 @@ export default function discountForm(){
             );
         }
   }
-
+  function convertToIso(dateString){
+    const date = new Date(dateString)
+    return date.toISOString();
+  }
+    const start =  formState.startDate;
+    const end = formState.endDate;
     const submit = useSubmit();
     function handleSave(){
       const data = {
@@ -165,12 +170,12 @@ export default function discountForm(){
         productName : (formState.productTitles),
         productId : (formState.productIds),
         productVariantId : (formState.productVariants),
-        quantity : parseInt(0),
-        discounting :parseInt(0),
-        subDiscount : "",
-        discountedAmount : parseInt(0),
-        startDate : formState.startDate,
-        endDate : formState.endDate
+        quantity : "0",
+        discounting :"0",
+        subDiscount : "test",
+        discountedAmount : "0",
+        startDate : convertToIso(start),
+        endDate : convertToIso(end)
       }
       setCleanFornState({...formState});
       submit(data,{method:"post"});
@@ -273,7 +278,7 @@ export default function discountForm(){
                                     label="Offer Name"
                                     autoComplete="off"
                                     value={formState.offerName}
-                                    onChange={(value) => setFormState({ ...formState, offerName: value })}
+                                    onChange={(value) => {setFormState({ ...formState, offerName: value })}}
                                     error={errors.offerName}/>
                         </BlockStack>
                         <BlockStack gap="500">
@@ -286,11 +291,7 @@ export default function discountForm(){
                                   { label: "Free Shipping", value: "freeShipping" },
                                 ]}
                                 value={formState.offerType}
-                                onChange={(value) => {
-                                  if (value >= 3 && value <= 40) {
-                                      setFormState({ ...formState, offerName: value });
-                                          }
-                                      }}
+                                onChange={(value) => {setFormState({ ...formState, offerType: value })}}
                                 />
                                 <Text>Example : </Text>
                                 <div style={{ marginTop: "10px" }}>{renderDiscountExample(formState.offerType)}</div>
