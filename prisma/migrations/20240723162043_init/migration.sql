@@ -20,15 +20,16 @@ CREATE TABLE "Session" (
 -- CreateTable
 CREATE TABLE "discountTable" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "shop" TEXT NOT NULL,
     "offerName" TEXT NOT NULL,
     "offerType" TEXT NOT NULL,
     "productName" TEXT NOT NULL,
     "productId" TEXT NOT NULL,
     "productVariantId" TEXT NOT NULL,
-    "quantity" INTEGER,
-    "discounting" INTEGER,
+    "quantity" TEXT,
+    "discounting" TEXT,
     "subDiscount" TEXT,
-    "discountedAmount" INTEGER,
+    "discountedAmount" TEXT,
     "startDate" DATETIME NOT NULL,
     "endDate" DATETIME NOT NULL
 );

@@ -2,7 +2,7 @@ import { json } from "@remix-run/node";
 import {  useLoaderData, useNavigate } from "@remix-run/react";
 import { authenticate } from "../shopify.server";
 import {getDiscounts} from "../models/discounts.server"
-import { Card, EmptyState, IndexTable, Layout, Link, Page } from "@shopify/polaris";
+import { Card, EmptyState, IndexTable, Layout,  Page } from "@shopify/polaris";
 
 export const loader = async ({ request }) => {
   const {session} = await authenticate.admin(request);
@@ -12,17 +12,12 @@ export const loader = async ({ request }) => {
   });
 };
 
-function truncat(str,{length = 25}= {}){
-  if (!str) return"";
-  if(str.length<=length) return "";
-  return str.slice(0,length)+"...";
-}
-
 function status(startDate,endDate){ // might not work, have to see date formate
   const currentDate = new Date();
   const start = new Date(startDate);
   const end = new Date(endDate);
   if(currentDate >= start && currentDate<=end) return "Campaign running";
+  if(start > currentDate) return "yet to start"
   return "Campaign Ended";
 }
 
