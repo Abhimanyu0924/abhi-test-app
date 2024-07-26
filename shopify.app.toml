@@ -3,7 +3,7 @@
 client_id = "b35c20c4a78da97e950036ae6654bbc1"
 name = "abhi-test-app"
 handle = "abhi-test-app-1"
-application_url = "https://carlo-victorian-surrey-tcp.trycloudflare.com"
+application_url = "https://interactive-aluminum-icons-rough.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "read_discounts,read_orders,read_products,write_discounts,write_product
 
 [auth]
 redirect_urls = [
-  "https://carlo-victorian-surrey-tcp.trycloudflare.com/auth/callback",
-  "https://carlo-victorian-surrey-tcp.trycloudflare.com/auth/shopify/callback",
-  "https://carlo-victorian-surrey-tcp.trycloudflare.com/api/auth/callback"
+  "https://interactive-aluminum-icons-rough.trycloudflare.com/auth/callback",
+  "https://interactive-aluminum-icons-rough.trycloudflare.com/auth/shopify/callback",
+  "https://interactive-aluminum-icons-rough.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

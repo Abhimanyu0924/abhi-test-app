@@ -113,11 +113,11 @@ const response = await admin.graphql(
               "appliesOnEachItem": false
             }
           },
-          "items": {
-            "products": {
-              "productVariantsToAdd" : "test"
-            }         
-          }
+          
+            "items": {
+            "allItems": true
+          }     
+        
         }
       }
     },
