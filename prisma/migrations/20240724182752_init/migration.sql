@@ -26,6 +26,7 @@ CREATE TABLE "discountTable" (
     "productName" TEXT NOT NULL,
     "productId" TEXT NOT NULL,
     "productVariantId" TEXT NOT NULL,
+    "productPrice" TEXT NOT NULL,
     "quantity" TEXT,
     "discounting" TEXT,
     "subDiscount" TEXT,

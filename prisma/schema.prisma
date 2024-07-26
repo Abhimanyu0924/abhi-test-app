@@ -38,7 +38,8 @@ model discountTable {
   offerType String
   productName String
   productId String            
-  productVariantId String    
+  productVariantId String
+  productPrice String    
   quantity String?
   discounting String?
   subDiscount String?

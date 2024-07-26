@@ -6,17 +6,13 @@ import {
   useNavigate,
   useNavigation,
 } from "@remix-run/react";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import { authenticate } from "../shopify.server";
 import { json, redirect } from "@remix-run/node";
 import db from "../db.server";
 import { getDiscountTable, validateForm } from "../models/discounts.server";
 import {
-  Box,
   Card,
-  Layout,
-  Link,
-  List,
   Page,
   Text,
   BlockStack,
@@ -24,9 +20,7 @@ import {
   Grid,
   Select,
   Button,
-  Tag,
   RadioButton,
-  InlineStack,
   PageActions,
   LegacyStack,
   Icon,
@@ -56,6 +50,86 @@ export async function action({ request, params }) {
     ...Object.fromEntries(await request.formData()),
     shop,
   };
+
+const response = await admin.graphql(
+  `#graphql
+  mutation discountAutomaticBasicCreate($automaticBasicDiscount: DiscountAutomaticBasicInput!) {
+    discountAutomaticBasicCreate(automaticBasicDiscount: $automaticBasicDiscount) {
+      automaticDiscountNode {
+        id
+        automaticDiscount {
+          ... on DiscountAutomaticBasic {
+            startsAt
+            endsAt
+            minimumRequirement {
+              ... on DiscountMinimumSubtotal {
+                greaterThanOrEqualToSubtotal {
+                  amount
+                  currencyCode
+                }
+              }
+            }
+            customerGets {
+              value {
+                ... on DiscountAmount {
+                  amount {
+                    amount
+                    currencyCode
+                  }
+                  appliesOnEachItem
+                }
+              }
+              items {
+                ... on AllDiscountItems {
+                  allItems
+                }
+              }
+            }
+          }
+        }
+      }
+      userErrors {
+        field
+        code
+        message
+      }
+    }
+  }`,
+  {
+    variables: {
+      "automaticBasicDiscount": {
+        "title": data.offerName,
+        "startsAt": data.startDate,
+        "endsAt": data.endDate,
+        "minimumRequirement": {
+          "subtotal": {
+            "greaterThanOrEqualToSubtotal": 0
+          }
+        },
+        "customerGets": {
+          "value": {
+            "discountAmount": {
+              "amount": 50,
+              "appliesOnEachItem": false
+            }
+          },
+          "items": {
+            "products": {
+              "productVariantsToAdd" : "test"
+            }         
+          }
+        }
+      }
+    },
+  },
+);
+await response.json();
+
+
+
+
+
+  
 
   if (data.action === "delete") {
     await db.discountTable.delete({ where: { id: Number(params.id) } });
@@ -227,6 +301,7 @@ export default function DiscountForm() {
       productName: formState.productTitles,
       productId: formState.productIds,
       productVariantId: formState.productVariants,
+      productPrice : formState.productPrice,
       quantity: JSON.stringify(quantity),
       discounting: JSON.stringify(discountAmount),
       subDiscount: formState.subDiscount,
@@ -247,21 +322,26 @@ export default function DiscountForm() {
     const productIds = [];
     const productVariants = [];
     const productTitles = [];
+    const productPrice = [];
 
     products.forEach((product) => {
       productIds.push(product.id);
       productTitles.push(product.title);
       const variants = product.variants.map((variant) => variant.id);
+      const price = product.variants.map((variant) => variant.price);
       productVariants.push(variants);
+      productPrice.push(price);
     });
     console.log("Product IDs:", JSON.stringify(productIds));
     console.log("Product Variants:", JSON.stringify(productVariants));
     console.log("Product Titles:", JSON.stringify(productTitles));
+    console.log("Product Price:", JSON.stringify(productPrice));
     setFormState({
       ...formState,
       productIds: JSON.stringify(productIds),
       productTitles: JSON.stringify(productTitles),
       productVariants: JSON.stringify(productVariants),
+      productPrice : JSON.stringify(productPrice),
     });
   }
   
@@ -325,6 +405,7 @@ export default function DiscountForm() {
               <Select
                 label="Offer Type"
                 options={[
+                  {label : "Select discount type"},
                   { label: "Volume Discount", value: "volumeDiscount" },
                   {
                     label: "Spend Amount Discount",
