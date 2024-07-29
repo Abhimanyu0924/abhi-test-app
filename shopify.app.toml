@@ -3,7 +3,7 @@
 client_id = "b35c20c4a78da97e950036ae6654bbc1"
 name = "abhi-test-app"
 handle = "abhi-test-app-1"
-application_url = "https://interactive-aluminum-icons-rough.trycloudflare.com"
+application_url = "https://positioning-political-lexmark-lit.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "read_discounts,read_orders,read_products,write_discounts,write_product
 
 [auth]
 redirect_urls = [
-  "https://interactive-aluminum-icons-rough.trycloudflare.com/auth/callback",
-  "https://interactive-aluminum-icons-rough.trycloudflare.com/auth/shopify/callback",
-  "https://interactive-aluminum-icons-rough.trycloudflare.com/api/auth/callback"
+  "https://positioning-political-lexmark-lit.trycloudflare.com/auth/callback",
+  "https://positioning-political-lexmark-lit.trycloudflare.com/auth/shopify/callback",
+  "https://positioning-political-lexmark-lit.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

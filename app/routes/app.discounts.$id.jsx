@@ -51,6 +51,77 @@ export async function action({ request, params }) {
     shop,
   };
 
+// const response = await admin.graphql(
+//   `#graphql
+//   mutation discountAutomaticBasicCreate($automaticBasicDiscount: DiscountAutomaticBasicInput!) {
+//     discountAutomaticBasicCreate(automaticBasicDiscount: $automaticBasicDiscount) {
+//       automaticDiscountNode {
+//         id
+//         automaticDiscount {
+//           ... on DiscountAutomaticBasic {
+//             startsAt
+//             endsAt
+//             minimumRequirement {
+//               ... on DiscountMinimumSubtotal {
+//                 greaterThanOrEqualToSubtotal {
+//                   amount
+//                   currencyCode
+//                 }
+//               }
+//             }
+//             customerGets {
+//               value {
+//                 ... on DiscountAmount {
+//                   amount {
+//                     amount
+//                     currencyCode
+//                   }
+//                   appliesOnEachItem
+//                 }
+//               }
+//               items {
+//                 ... on AllDiscountItems {
+//                   allItems
+//                 }
+//               }
+//             }
+//           }
+//         }
+//       }
+//       userErrors {
+//         field
+//         code
+//         message
+//       }
+//     }
+//   }`,
+//   {
+//     variables: {
+//       "automaticBasicDiscount": {
+//         "title": data.offerName,
+//         "startsAt": data.startDate,
+//         "endsAt": data.endDate,
+//         "minimumRequirement": {
+//           "subtotal": {
+//             "greaterThanOrEqualToSubtotal": 0
+//           }
+//         },
+//        "customerGets": {
+//           "value": {
+//             "discountAmount": {
+//               "amount": 50,
+//               "appliesOnEachItem": false
+//             }
+//           },
+//           "items": {
+//             "all": true
+//           }
+//         }
+//       }
+//     },
+//   },
+// );
+
 const response = await admin.graphql(
   `#graphql
   mutation discountAutomaticBasicCreate($automaticBasicDiscount: DiscountAutomaticBasicInput!) {
@@ -99,11 +170,11 @@ const response = await admin.graphql(
     variables: {
       "automaticBasicDiscount": {
         "title": data.offerName,
-        "startsAt": data.startDate,
-        "endsAt": data.endDate,
+        "startsAt": "2022-06-21T00:00:00Z",
+        "endsAt": "2022-09-21T00:00:00Z",
         "minimumRequirement": {
           "subtotal": {
-            "greaterThanOrEqualToSubtotal": 0
+            "greaterThanOrEqualToSubtotal": 200
           }
         },
         "customerGets": {
@@ -113,16 +184,15 @@ const response = await admin.graphql(
               "appliesOnEachItem": false
             }
           },
-          
-            "items": {
-            "allItems": true
-          }     
-        
+          "items": {
+            "all": true
+          }
         }
       }
     },
   },
 );
+
 await response.json();
 
 
